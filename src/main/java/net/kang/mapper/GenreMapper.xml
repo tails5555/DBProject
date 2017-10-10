@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+             "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.kang.mapper.GenreMapper">
+	<select id="findAll" resultType="Genre">
+		SELECT *
+		FROM Genre
+	</select>
+	<select id="findAllWithMusics" resultMap="resultMap01">
+		SELECT g.*, m.id musicId, m.singer, m.title, m.year
+		FROM Genre g LEFT JOIN Music m ON g.id=m.genreId
+		WHERE g.id=#{id}
+	</select>
+	<resultMap id="resultMap01" type="Genre">
+		<id property="id" column="id" />
+		<result property="genreName" column="genreName" />
+		<collection property="musics" ofType="Music">
+			<id property="id" column="musicId" />
+			<result property="singer" column="singer" />
+			<result property="title" column="title" />
+			<result property="year" column="year" />
+		</collection>
+	</resultMap>
+	<select id="findOne" resultType="Genre">
+		SELECT *
+		FROM Genre
+		WHERE id=#{id}
+	</select>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO Genre(genreName)
+		values(#{genreName})
+	</insert>
+	<update id="update">
+		UPDATE Genre SET
+			genreName=#{genreName}
+		WHERE id=#{id}
+	</update>
+</mapper>
